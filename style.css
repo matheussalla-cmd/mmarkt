@@ -952,13 +952,18 @@ body.light .plat-kpi-card { background: #fff; }
 .sb-owner-avatar {
   width: 36px; height: 36px;
   border-radius: 9px;
-  background: linear-gradient(135deg, #f0c040, #d4a017);
+  background: var(--bg3);
+  border: 1px solid rgba(240,192,64,0.3);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Calibri', 'Calibri Light', 'Gill Sans', 'Trebuchet MS', sans-serif;
-  font-weight: 800; font-size: 13px;
-  color: #0a0d14;
   flex-shrink: 0;
-  letter-spacing: -0.5px;
+  overflow: hidden;
+  padding: 4px;
+}
+.sb-owner-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 .sb-owner-info { overflow: hidden; }
 .sb-owner-name {

@@ -56,6 +56,9 @@ function applyTheme(theme) {
     const el = document.getElementById(id);
     if (el) el.src = logoSrc;
   });
+  // Atualiza logo no owner card conforme o tema
+  const ownerLogo = document.querySelector('.sb-owner-logo');
+  if (ownerLogo) ownerLogo.src = logoSrc;
 
   // Re-render charts for theme-aware colors
   if (document.getElementById('page-dashboard')?.classList.contains('active')) {
@@ -135,12 +138,13 @@ function initApp() {
   loadState();
   // Identidade do proprietário — gerenciado apenas via sistema
   (function(){
-    const _o = atob('TU1hcmt0');
-    const _r = atob('TWFya2V0aW5nIEVzdHJhdMOpZ2ljbw==');
-    const _i = atob('TU0=');
+    const _o = decodeURIComponent(escape(atob('TU1hcmt0')));
+    const _r = decodeURIComponent(escape(atob('TWFya2V0aW5nIEVzdHJhdMOpZ2ljbw==')));
     const el = document.getElementById('sbOwnerCard');
     if (!el) return;
-    el.innerHTML = '<div class="sb-owner-card"><div class="sb-owner-avatar">'+_i+'</div><div class="sb-owner-info"><div class="sb-owner-name">'+_o+'</div><div class="sb-owner-role">'+_r+'</div></div></div>';
+    const _isDark = !document.body.classList.contains('light');
+    const _logo = _isDark ? 'Logo_MMarkt.png' : 'Logo_MMarkt_Preto.png';
+    el.innerHTML = '<div class="sb-owner-card"><div class="sb-owner-avatar"><img src="'+_logo+'" alt="MMarkt" class="sb-owner-logo" onerror="this.outerHTML=\'MM\'"></div><div class="sb-owner-info"><div class="sb-owner-name">'+_o+'</div><div class="sb-owner-role">'+_r+'</div></div></div>';
   })();
   // Aplica tema salvo
   const savedTheme = localStorage.getItem('theusmarkt_theme') || 'dark';
