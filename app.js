@@ -97,6 +97,40 @@ function saveState() {
 }
 
 // ─── INIT ────────────────────────────────────────────────────
+// ── MOBILE SIDEBAR ───────────────────────────────────────────
+function handleMenuToggle() {
+  if (window.innerWidth <= 768) {
+    toggleMobileSidebar();
+  } else {
+    toggleSidebar();
+  }
+}
+
+function toggleMobileSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('mobileOverlay');
+  if (!sb) return;
+  const open = sb.classList.toggle('mobile-open');
+  if (ov) ov.classList.toggle('active', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMobileSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('mobileOverlay');
+  if (sb) sb.classList.remove('mobile-open');
+  if (ov) ov.classList.remove('active');
+  document.body.style.overflow = '';
+}
+// Fecha sidebar mobile ao navegar entre páginas
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeMobileSidebar();
+    });
+  });
+});
+
+
 function initApp() {
   loadState();
   // Identidade do proprietário — gerenciado apenas via sistema

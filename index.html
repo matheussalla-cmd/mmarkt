@@ -9,6 +9,10 @@
 </head>
 <body>
 
+<!-- Overlay mobile sidebar -->
+<div id="mobileOverlay" onclick="closeMobileSidebar()"></div>
+
+
 <!-- ══════ LOGIN ══════ -->
 <div id="loginScreen" class="login-screen">
   <div class="login-bg">
@@ -93,7 +97,7 @@
   <div class="main-wrap">
     <header class="topbar">
       <div class="tb-left">
-        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <button class="menu-toggle" id="menuToggleBtn" onclick="handleMenuToggle()">☰</button>
         <h2 id="pageTitle">Dashboard</h2>
       </div>
       <div class="tb-right">

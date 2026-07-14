@@ -979,3 +979,144 @@ body.light .plat-kpi-card { background: #fff; }
 /* Oculta quando sidebar colapsada */
 .sidebar.collapsed .sb-owner-card { display: none; }
 body.light .sb-owner-card { background: rgba(240,192,64,0.07); border-color: rgba(240,192,64,0.2); }
+
+/* ════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — MMarkt v5.0
+   Breakpoints: 768px (tablet), 480px (phone)
+   ════════════════════════════════════════════════════════════ */
+
+/* Overlay escuro atrás da sidebar mobile */
+#mobileOverlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 199;
+  backdrop-filter: blur(2px);
+}
+#mobileOverlay.active { display: block; }
+
+
+/* ── TABLET (≤ 768px) ── */
+@media (max-width: 768px) {
+
+  /* menu-toggle já está visível — sem mudança necessária */
+
+  /* Sidebar vira drawer lateral */
+  .sidebar {
+    position: fixed !important;
+    left: -260px;
+    top: 0; bottom: 0;
+    width: 240px !important;
+    min-width: 240px !important;
+    z-index: 200;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+    transition: left 0.28s cubic-bezier(0.4,0,0.2,1) !important;
+  }
+  .sidebar.mobile-open { left: 0 !important; }
+  .sidebar.collapsed { left: -260px !important; }
+
+  /* Main ocupa 100% */
+  .main-wrap { width: 100% !important; }
+
+  /* Topbar */
+  .topbar { padding: 10px 12px; gap: 8px; flex-wrap: nowrap; }
+  .topbar-right { gap: 6px; }
+  .btn-pdf, .btn-pdf-sm { font-size: 11px; padding: 6px 10px; }
+
+  /* Page sections */
+  .page-section { padding: 12px; }
+
+  /* Dashboard KPI grid → 2 colunas */
+  .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  .kpi-card { padding: 14px 12px; }
+  .kpi-val { font-size: 20px !important; }
+
+  /* Charts → 1 coluna */
+  .charts-row-a, .charts-row-b { grid-template-columns: 1fr !important; }
+  .charts-row-a .chart-box:first-child,
+  .charts-row-b .chart-box:first-child { grid-column: auto !important; }
+  .chart-box { min-height: 200px; }
+
+  /* Camp top row → coluna única */
+  .camp-row-top { grid-template-columns: 1fr !important; flex-direction: column !important; display: flex !important; gap: 10px; }
+  .camp-row-charts { grid-template-columns: 1fr !important; }
+  .camp-row-3 { grid-template-columns: 1fr !important; }
+  .camp-row-audience { grid-template-columns: 1fr !important; }
+
+  /* Platform view KPI grid → 2 colunas */
+  .plat-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .plat-charts-grid { grid-template-columns: 1fr !important; }
+
+  /* Tabela scrollável */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbox-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .tbox-head input { width: 100% !important; }
+
+  /* Date picker */
+  .date-range-picker { flex-wrap: wrap; gap: 6px; }
+  .date-inp { width: 120px; font-size: 11px; }
+
+  /* Plat tabs */
+  .plat-tabs { flex-wrap: wrap; gap: 4px; }
+  .plat-tabs-right { width: 100%; }
+  .plat-tab { font-size: 11px; padding: 6px 10px; }
+
+  /* Filtros */
+  .filters-bar { flex-wrap: wrap; gap: 6px; }
+  .filters-bar select, .filters-bar input { font-size: 12px; }
+
+  /* Accounts list */
+  .accounts-grid { grid-template-columns: 1fr !important; }
+
+  /* AI / Market pages */
+  .ai-cols, .market-cols { grid-template-columns: 1fr !important; }
+
+  /* Competitor cards */
+  .comp-grid { grid-template-columns: 1fr !important; }
+
+  /* Schedule cards */
+  .sched-cards { grid-template-columns: 1fr !important; }
+
+  /* Modals */
+  .modal-box { width: 95vw !important; max-height: 92vh; overflow-y: auto; }
+}
+
+/* ── PHONE (≤ 480px) ── */
+@media (max-width: 480px) {
+
+  /* KPIs → 1 coluna em telas muito pequenas */
+  .kpi-grid { grid-template-columns: 1fr !important; }
+  .plat-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Topbar compacto */
+  .topbar { padding: 8px 10px; }
+  .page-title { font-size: 15px !important; }
+  .topbar-right .btn-pdf { display: none; } /* esconde PDF no topbar, usa o da aba */
+
+  /* Login */
+  .login-card { padding: 28px 18px !important; margin: 12px !important; }
+  .login-logo-img { width: 120px !important; }
+  .login-title { font-size: 20px !important; }
+
+  /* Charts menores */
+  .chart-canvas-wrap { min-height: 160px; }
+
+  /* Tabela — fonte menor para caber mais */
+  .dt th, .dt td { padding: 8px 8px; font-size: 11px; }
+
+  /* Plat KPI val menor */
+  .plat-kpi-val { font-size: 16px !important; }
+  .plat-kpi-card { padding: 10px 8px; }
+
+  /* Botão de aplicar data */
+  .btn-apply-date { font-size: 11px; padding: 6px 8px; }
+
+  /* Funil */
+  .funnel-stage { padding: 6px 10px; }
+
+  /* Owner card sidebar */
+  .sb-owner-name { font-size: 11px; }
+}
+
+/* ── Garante que topbar fique acima do overlay ── */
+.topbar { position: relative; z-index: 10; }
