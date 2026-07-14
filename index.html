@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheusMarkt – Inteligência em Tráfego Pago</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════ LOGIN ══════ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-bg">
+    <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+    <div class="grid-lines"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="Logo_TheusMarkt.png" alt="TheusMarkt" class="login-logo-img" id="loginLogo">
+      <p class="login-tagline">Plataforma de Inteligência em Tráfego Pago</p>
+    </div>
+    <div class="login-fields">
+      <label>Senha de Acesso</label>
+      <div class="pass-wrap">
+        <input type="password" id="pwInput" placeholder="••••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="eye-btn" onclick="togglePw()">👁</button>
+      </div>
+      <span class="login-err" id="loginErr"></span>
+      <button class="btn-enter" onclick="doLogin()">Acessar Sistema →</button>
+    </div>
+    <p class="login-sub">Acesso protegido · TheusMarkt v4.0</p>
+  </div>
+</div>
+
+<!-- ══════ APP ══════ -->
+<div id="app" class="app hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <img src="Logo_TheusMarkt.png" alt="TheusMarkt" class="sb-logo-img" id="sidebarLogo">
+      <button class="sb-close" onclick="toggleSidebar()">‹</button>
+    </div>
+    <div class="sb-sync">
+      <span class="sync-pulse"></span>
+      <span id="syncText">Pronto para sincronizar</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="nav-group-label">Visão Geral</div>
+      <button class="nav-btn active" data-page="dashboard" onclick="go('dashboard',this)">
+        <span>📊</span><span class="nav-label">Dashboard</span>
+      </button>
+      <button class="nav-btn" data-page="campaigns" onclick="go('campaigns',this)">
+        <span>🎯</span><span class="nav-label">Campanhas</span>
+      </button>
+      <div class="nav-group-label">Inteligência</div>
+      <button class="nav-btn" data-page="improvements" onclick="go('improvements',this)">
+        <span>🚀</span><span class="nav-label">Melhorias</span>
+        <span class="nav-badge ai-badge">IA</span>
+      </button>
+      <button class="nav-btn nav-btn-ai" data-page="aianalysis" onclick="go('aianalysis',this)">
+        <span>🤖</span><span class="nav-label">Análise com IA</span>
+        <span class="nav-badge">IA</span>
+      </button>
+      <button class="nav-btn" data-page="market" onclick="go('market',this)">
+        <span>🔍</span><span class="nav-label">Pesquisa de Mercado</span>
+        <span class="nav-badge ai-badge">IA</span>
+      </button>
+      <div class="nav-group-label">Sistema</div>
+      <button class="nav-btn" data-page="accounts" onclick="go('accounts',this)">
+        <span>🔑</span><span class="nav-label">Contas &amp; Tokens</span>
+      </button>
+      <button class="nav-btn" data-page="schedule" onclick="go('schedule',this)">
+        <span>⏰</span><span class="nav-label">Atualizações</span>
+      </button>
+    </nav>
+    <div id="sbOwnerCard"></div>
+    <div class="sb-foot">
+      <div class="sb-version">v4.0 · Análise Estratégica + IA</div>
+      <div class="theme-toggle-wrap">
+        <span class="theme-toggle-icon" id="themeIconLeft">🌙</span>
+        <button class="theme-toggle-switch" id="btnTheme" onclick="toggleTheme()" title="Alternar tema" role="switch">
+          <div class="theme-toggle-thumb" id="themeThumb"></div>
+        </button>
+        <span class="theme-toggle-icon" id="themeIconRight">☀️</span>
+      </div>
+      <button class="btn-logout" onclick="logout()">↩ Sair</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="tb-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <h2 id="pageTitle">Dashboard</h2>
+      </div>
+      <div class="tb-right">
+        <select class="f-sel" id="fAccount" onchange="applyFilters()">
+          <option value="all">Todas as Contas</option>
+        </select>
+        <button class="btn-refresh" onclick="refreshAll()">↻ Atualizar</button>
+        <button class="btn-pdf" onclick="exportPDF()" title="Exportar Dashboard em PDF">⬇ PDF</button>
+      </div>
+    </header>
+
+    <div class="content-area" id="mainContentArea">
+
+      <!-- ── DASHBOARD ── -->
+      <section class="page active" id="page-dashboard">
+
+        <!-- Date filter bar -->
+        <div class="dash-filter-bar">
+          <div class="date-range-picker" style="background:var(--bg2);border:1px solid var(--border);">
+            <span style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">De</span>
+            <input type="date" id="dashDateFrom" class="date-inp" style="width:120px">
+            <span class="date-sep">→</span>
+            <span style="font-size:11px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Até</span>
+            <input type="date" id="dashDateTo" class="date-inp" style="width:120px">
+            <button class="btn-apply-date" onclick="applyDashboardDate()">✓ Aplicar</button>
+          </div>
+          <div style="font-size:11px;color:var(--text3)" id="dashDateLabel"></div>
+        </div>
+
+        <!-- KPI ROW 1: métricas financeiras principais -->
+        <div class="kpi-section-label">💰 Performance Financeira</div>
+        <div class="kpi-row" id="kpiRow1">
+          <div class="kpi kpi-highlight"><div class="kpi-ico blue">💰</div><div><div class="kpi-lbl">Investimento</div><div class="kpi-val" id="vInvest">—</div><div class="kpi-delta" id="dInvest"></div></div></div>
+          <div class="kpi kpi-highlight"><div class="kpi-ico green">💵</div><div><div class="kpi-lbl">Receita</div><div class="kpi-val" id="vRevenue">—</div><div class="kpi-delta" id="dRevenue"></div></div></div>
+          <div class="kpi kpi-highlight"><div class="kpi-ico gold">📈</div><div><div class="kpi-lbl">ROAS Médio</div><div class="kpi-val" id="vRoas">—</div><div class="kpi-delta" id="dRoas"></div></div></div>
+          <div class="kpi"><div class="kpi-ico teal">🎯</div><div><div class="kpi-lbl">Resultados</div><div class="kpi-val" id="vResults">—</div><div class="kpi-delta" id="dResults"></div></div></div>
+          <div class="kpi"><div class="kpi-ico red">💡</div><div><div class="kpi-lbl">CPL</div><div class="kpi-val" id="vCpl">—</div><div class="kpi-delta" id="dCpl"></div></div></div>
+        </div>
+
+        <!-- KPI ROW 2: métricas de alcance e engajamento -->
+        <div class="kpi-section-label" style="margin-top:18px">📡 Alcance & Engajamento</div>
+        <div class="kpi-row" id="kpiRow2">
+          <div class="kpi"><div class="kpi-ico purple">🖱️</div><div><div class="kpi-lbl">Cliques</div><div class="kpi-val" id="vClicks">—</div><div class="kpi-delta" id="dClicks"></div></div></div>
+          <div class="kpi"><div class="kpi-ico orange">👁️</div><div><div class="kpi-lbl">Impressões</div><div class="kpi-val" id="vImpr">—</div><div class="kpi-delta" id="dImpr"></div></div></div>
+          <div class="kpi"><div class="kpi-ico indigo">🌐</div><div><div class="kpi-lbl">Alcance</div><div class="kpi-val" id="vReach">—</div><div class="kpi-delta" id="dReach"></div></div></div>
+          <div class="kpi"><div class="kpi-ico teal">🎯</div><div><div class="kpi-lbl">CTR Médio</div><div class="kpi-val" id="vCtr">—</div><div class="kpi-delta" id="dCtr"></div></div></div>
+          <div class="kpi"><div class="kpi-ico pink">💲</div><div><div class="kpi-lbl">CPC Médio</div><div class="kpi-val" id="vCpc">—</div><div class="kpi-delta" id="dCpc"></div></div></div>
+        </div>
+
+
+        <!-- CHARTS ÁREA -->
+        <div class="charts-area" style="margin-top:20px">
+
+          <!-- LINHA A: Investimento×Receita (largo) + Canal (compacto) + ROAS (compacto) -->
+          <div class="charts-row-a">
+            <div class="chart-box chart-main">
+              <div class="cbox-head">
+                <h4>Investimento × Receita</h4>
+                <div class="legend"><span class="ld blue"></span>Investimento <span class="ld green"></span>Receita</div>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="cInvRev"></canvas></div>
+            </div>
+            <div class="chart-box chart-side">
+              <div class="cbox-head"><h4>Distribuição por Canal</h4></div>
+              <div class="chart-canvas-wrap"><canvas id="cChannels"></canvas></div>
+            </div>
+            <div class="chart-box chart-side">
+              <div class="cbox-head"><h4>ROAS por Campanha</h4></div>
+              <div class="chart-canvas-wrap"><canvas id="cRoas"></canvas></div>
+            </div>
+          </div>
+
+          <!-- LINHA B: CPC (largo) + Gênero (médio) + Faixa Etária (médio) -->
+          <div class="charts-row-b" style="margin-top:12px">
+            <div class="chart-box chart-cpc">
+              <div class="cbox-head"><h4>CPC ao Longo do Tempo</h4></div>
+              <div class="chart-canvas-wrap"><canvas id="cCpc"></canvas></div>
+            </div>
+            <div class="chart-box chart-demo">
+              <div class="cbox-head">
+                <h4>Gênero dos Leads</h4>
+                <span class="cbox-badge" id="genderTotal">—</span>
+              </div>
+              <!-- renderGenderChart injeta aqui -->
+              <div id="cGender" class="demo-chart-inner"></div>
+            </div>
+            <div class="chart-box chart-demo">
+              <div class="cbox-head">
+                <h4>Faixa Etária</h4>
+                <span class="cbox-badge" id="ageTotal">—</span>
+              </div>
+              <div class="chart-canvas-wrap"><canvas id="cAge"></canvas></div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <!-- CAMPAIGN TABLE with expandable ads -->
+        <div class="table-box" style="margin-top:22px">
+          <div class="tbox-head">
+            <h4>Resumo de Campanhas</h4>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="search" placeholder="Buscar campanha..." id="tSearch" oninput="filterCampaignTable(this.value)">
+              <button class="btn-pdf-sm" onclick="exportPDF()" title="Exportar PDF">⬇ PDF</button>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="dt">
+              <thead><tr>
+                <th style="width:30px"></th>
+                <th>Campanha</th>
+                <th>Conta</th>
+                <th>Status</th>
+                <th>Investimento</th>
+                <th>Receita</th>
+                <th>ROAS</th>
+                <th>Resultados</th>
+                <th>Cliques</th>
+                <th>CTR</th>
+                <th>CPC</th>
+                <th>CPL</th>
+                <th>Ações</th>
+              </tr></thead>
+              <tbody id="dtBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CAMPAIGNS ── -->
+      <section class="page" id="page-campaigns">
+
+        <!-- Platform filter tabs -->
+        <div class="plat-tabs">
+          <button class="plat-tab active" data-plat="meta" onclick="setCampPlatform('meta',this)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" class="plat-logo" alt="Meta"> Análise Estratégica
+          </button>
+          <button class="plat-tab" data-plat="all" onclick="setCampPlatform('all',this)">
+            <span class="plat-tab-icon">📊</span> Perfis e Funil
+          </button>
+
+          <div class="plat-tabs-right">
+            <!-- Date range picker -->
+            <div class="date-range-picker">
+              <input type="date" id="campDateFrom" class="date-inp" >
+              <span class="date-sep">→</span>
+              <input type="date" id="campDateTo"   class="date-inp" >
+              <button class="btn-apply-date" onclick="applyDateRange()">✓ Aplicar</button>
+              <button class="btn-pdf" onclick="exportCampPDF()" title="Exportar PDF desta página" style="margin-left:6px">⬇ PDF</button>
+              <button class="btn-compare" id="btnCompare" onclick="toggleCompare()" title="Comparar com período anterior">
+                ⇄ Comparar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compare banner -->
+        <div id="compareBanner" class="compare-banner hidden">
+          <span class="compare-icon">⇄</span>
+          <span id="compareLabel">Comparando com período anterior</span>
+          <button onclick="toggleCompare()" style="background:none;border:none;color:inherit;cursor:pointer;font-size:16px;margin-left:8px">✕</button>
+        </div>
+
+        <!-- Visão dedicada por plataforma (Google / Meta) -->
+        <div id="campPlatformView" style="display:none"></div>
+
+        <!-- Visão genérica (Todas / TikTok / LinkedIn) -->
+        <div id="campGenericView">
+
+        <!-- ROW 1: Funil + Dispositivos + Métricas importantes -->
+        <div class="camp-row-top" id="campRowTop">
+          <!-- Funil de Conversão -->
+          <div class="camp-card-box funnel-box">
+            <div class="cbox-head"><h4>Funil de Conversão <span class="cbox-badge" id="funnelLabel">Geral</span></h4></div>
+            <div id="funnelWrap"></div>
+          </div>
+          <!-- Distribuição de Dispositivos -->
+          <div class="camp-card-box device-box">
+            <div class="cbox-head"><h4>Distribuição de Dispositivos</h4></div>
+            <div style="height:160px"><canvas id="cDevices"></canvas></div>
+            <div id="deviceList" class="device-list"></div>
+          </div>
+          <!-- Métricas Importantes -->
+          <div class="camp-card-box metrics-box">
+            <div class="cbox-head"><h4>Métricas Importantes</h4></div>
+            <div class="imp-metrics-grid" id="impMetrics"></div>
+          </div>
+        </div>
+
+        <!-- ROW 2: Evolução Cliques + Evolução Leads -->
+        <div class="camp-row-charts">
+          <div class="chart-box">
+            <div class="cbox-head"><h4>Evolução de Cliques</h4></div>
+            <div class="chart-canvas-wrap"><canvas id="cCampClicks"></canvas></div>
+          </div>
+          <div class="chart-box">
+            <div class="cbox-head"><h4>Evolução de Leads / Resultados</h4></div>
+            <div class="chart-canvas-wrap"><canvas id="cCampLeads"></canvas></div>
+          </div>
+        </div>
+
+        <!-- ROW 3: CPL por Plataforma + ROAS por Plataforma + Top Localização -->
+        <div class="camp-row-3">
+          <div class="chart-box">
+            <div class="cbox-head"><h4>CPL Médio por Plataforma</h4></div>
+            <div class="chart-canvas-wrap"><canvas id="cCplPlat"></canvas></div>
+          </div>
+          <div class="chart-box">
+            <div class="cbox-head"><h4>ROAS por Plataforma</h4></div>
+            <div class="chart-canvas-wrap"><canvas id="cRoasPlat"></canvas></div>
+          </div>
+          <div class="camp-card-box">
+            <div class="cbox-head"><h4>📍 Top 5 Localização dos Leads</h4></div>
+            <div id="topLocations" class="top-locations"></div>
+          </div>
+        </div>
+
+        <!-- ROW 4: Público Atingido -->
+        <div class="camp-row-audience">
+          <div class="camp-card-box audience-box">
+            <div class="cbox-head"><h4>👥 Público Atingido</h4><span class="cbox-badge" id="audienceTotal">—</span></div>
+            <div class="audience-grid" id="audienceGrid"></div>
+          </div>
+          <div class="camp-card-box insights-box">
+            <div class="cbox-head"><h4>💡 Insights &amp; Recomendações</h4></div>
+            <div id="campInsights" class="camp-insights-list"></div>
+          </div>
+        </div>
+
+        <!-- ROW 5: Active Campaigns Table -->
+        <div class="table-box" style="margin-top:16px">
+          <div class="tbox-head">
+            <div>
+              <h4>Campanhas Ativas</h4>
+              <span class="tbox-sub" id="campCount">— campanhas</span>
+            </div>
+            <input type="search" placeholder="Buscar campanha..." id="campSearch" oninput="filterActiveCamps(this.value)">
+          </div>
+          <div class="table-scroll">
+            <table class="dt" id="activeCampsTable">
+              <thead><tr>
+                <th style="width:28px"></th>
+                <th>Plataforma</th>
+                <th>Campanha</th>
+                <th>Status</th>
+                <th>Objetivo</th>
+                <th>Investimento</th>
+                <th>Resultados</th>
+                <th>Cliques</th>
+                <th>CTR</th>
+                <th>CPC</th>
+                <th>Leads</th>
+                <th>CPL</th>
+                <th>Frequência</th>
+                <th>ROAS</th>
+              </tr></thead>
+              <tbody id="activeCampsBody"></tbody>
+            </table>
+          </div>
+          <div class="table-footer" id="campTableFooter"></div>
+        </div>
+
+        </div><!-- /campGenericView -->
+      </section>
+
+      <!-- ── TOP ADS (removido – redirecionado para Campanhas) ── -->
+      <section class="page" id="page-topads" style="display:none!important"></section>
+
+      <!-- ── IMPROVEMENTS ── -->
+      <section class="page" id="page-improvements">
+        <div class="impr-intro">
+          <h3>🚀 O que melhorar em cada campanha</h3>
+          <p>Score automático e recomendações baseadas nos dados de performance. Para análise profunda, use a IA.</p>
+        </div>
+        <div id="imprGrid"></div>
+      </section>
+
+      <!-- ── AI ANALYSIS ── -->
+      <section class="page" id="page-aianalysis"></section>
+
+      <!-- ── MARKET ── -->
+      <section class="page" id="page-market">
+        <div class="market-top">
+          <h3>🔍 Pesquisa de Mercado &amp; Concorrentes</h3>
+          <div class="market-add">
+            <input type="text" id="cName" placeholder="Nome do concorrente">
+            <input type="text" id="cUrl" placeholder="Site / URL">
+            <input type="text" id="cNiche" placeholder="Nicho / Segmento">
+            <input type="text" id="cBudget" placeholder="Budget est. (R$)">
+            <button class="btn-primary" onclick="addCompetitor()">+ Adicionar</button>
+          </div>
+        </div>
+        <div id="compGrid"></div>
+        <div class="mkt-insights">
+          <h4>📊 Insights</h4>
+          <div id="insightsWrap"></div>
+        </div>
+      </section>
+
+      <!-- ── ACCOUNTS ── -->
+      <section class="page" id="page-accounts">
+        <div class="acc-top">
+          <h3>🔑 Contas de Anúncios</h3>
+          <button class="btn-primary" onclick="openModal('modalAddAccount')">+ Adicionar Conta</button>
+        </div>
+        <div id="accList"></div>
+      </section>
+
+      <!-- ── ATUALIZAÇÕES ── -->
+      <section class="page" id="page-schedule">
+        <h3>⏰ Atualizações Automáticas</h3>
+        <div class="sched-cards sched-cards-row">
+          <div class="sched-card sched-card-sm">
+            <div class="sched-ic-sm">🌅</div>
+            <div class="sched-info">
+              <h4>Matinal</h4>
+              <p><strong>08:00</strong> diário</p>
+              <div class="badge-on" style="font-size:9px;padding:2px 7px">Ativo</div>
+              <div class="sched-next" id="nextMorn">—</div>
+            </div>
+          </div>
+          <div class="sched-card sched-card-sm">
+            <div class="sched-ic-sm">☀️</div>
+            <div class="sched-info">
+              <h4>Meio-Dia</h4>
+              <p><strong>12:00</strong> diário</p>
+              <div class="badge-on" style="font-size:9px;padding:2px 7px">Ativo</div>
+              <div class="sched-next" id="nextNoon">—</div>
+            </div>
+          </div>
+          <div class="sched-card sched-card-sm">
+            <div class="sched-ic-sm">🌆</div>
+            <div class="sched-info">
+              <h4>Tarde</h4>
+              <p><strong>18:00</strong> diário</p>
+              <div class="badge-on" style="font-size:9px;padding:2px 7px">Ativo</div>
+              <div class="sched-next" id="nextEvening">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="log-box">
+          <h4>Histórico de Atualizações</h4>
+          <div id="updateLog"></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODALS ══════ -->
+<div class="modal-overlay hidden" id="modalAddAccount" onclick="if(event.target===this)closeModal('modalAddAccount')">
+  <div class="modal-card">
+    <div class="modal-hd"><h3>Adicionar Conta de Anúncio</h3><button onclick="closeModal('modalAddAccount')">✕</button></div>
+    <div class="modal-bd">
+      <label>Plataforma</label>
+      <select id="mPlatform" onchange="onPlatformChange()">
+        <option value="meta">📘 Meta Ads (Facebook/Instagram)</option>
+      </select>
+      <div id="platformHint" class="platform-hint"></div>
+      <label>Nome da Conta</label>
+      <input type="text" id="mName" placeholder="Ex: Loja X – Meta">
+      <label>Token de Acesso</label>
+      <input type="text" id="mToken" placeholder="Cole o token aqui...">
+      <label id="mAccIdLabel">ID da Conta</label>
+      <input type="text" id="mAccId" placeholder="Ex: act_123456789">
+      <button class="btn-primary full" onclick="saveAccount()">Salvar Conta</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modalAddCampaign" onclick="if(event.target===this)closeModal('modalAddCampaign')">
+  <div class="modal-card">
+    <div class="modal-hd"><h3>Adicionar Campanha Manual</h3><button onclick="closeModal('modalAddCampaign')">✕</button></div>
+    <div class="modal-bd">
+      <label>Nome da Campanha</label>
+      <input type="text" id="mCampName" placeholder="Ex: Black Friday – Conversão">
+      <label>Conta</label>
+      <select id="mCampAccount"></select>
+      <label>Objetivo</label>
+      <select id="mCampObj">
+        <option value="conversao">Conversão</option>
+        <option value="trafego">Tráfego</option>
+        <option value="awareness">Alcance / Awareness</option>
+        <option value="leads">Geração de Leads</option>
+      </select>
+      <label>Orçamento Diário (R$)</label>
+      <input type="number" id="mCampBudget" placeholder="0.00" min="0">
+      <label>Status</label>
+      <select id="mCampStatus">
+        <option value="ativa">Ativa</option>
+        <option value="pausada">Pausada</option>
+        <option value="rascunho">Rascunho</option>
+      </select>
+      <button class="btn-primary full" onclick="saveCampaign()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
