@@ -12,7 +12,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       ['loginLogo', 'sidebarLogo'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.src = 'Logo_TheusMarkt_Preto.png';
+        if (el) el.src = 'Logo_MMarkt_Preto.png';
       });
     });
   }
@@ -49,8 +49,8 @@ function applyTheme(theme) {
   document.body.classList.toggle('light', isLight);
 
   // Swap logos
-  const logoDark  = 'Logo_TheusMarkt.png';
-  const logoLight = 'Logo_TheusMarkt_Preto.png';
+  const logoDark  = 'Logo_MMarkt.png';
+  const logoLight = 'Logo_MMarkt_Preto.png';
   const logoSrc   = isLight ? logoLight : logoDark;
   ['loginLogo', 'sidebarLogo'].forEach(id => {
     const el = document.getElementById(id);
@@ -432,7 +432,7 @@ async function syncAllAccounts() {
 //  1. Acesse: console.cloud.google.com → Criar projeto
 //  2. Ative a API: "Google Ads API"
 //  3. Crie credenciais OAuth2 (tipo: Aplicativo da Web)
-//     URI de redirecionamento: https://theusmarkt.netlify.app
+//     URI de redirecionamento: https://mmarkt.netlify.app
 //  4. Obtenha o Developer Token em:
 //     ads.google.com → Ferramentas → Central da API → Token de desenvolvedor
 //  5. Em Contas & Tokens:
@@ -2192,7 +2192,7 @@ function renderAccountsList(){
     <h4>⚠️ Como configurar o Meta Ads corretamente</h4>
     <div class="acc-steps">
       <div class="acc-step"><span class="step-num">1</span><div><strong>Crie um App no Facebook Developers</strong><br>Acesse <a href="https://developers.facebook.com" target="_blank" style="color:var(--blue)">developers.facebook.com</a> → Meus Apps → Criar App → Tipo: <em>Negócios</em></div></div>
-      <div class="acc-step"><span class="step-num">2</span><div><strong>Registre seu domínio Netlify</strong><br>App Settings → Basic → Site URL → cole exatamente: <code>https://theusmarkt.netlify.app</code><br><span style="color:var(--red);font-size:11px">⚠ Sem isso o browser bloqueia por CORS e aparece erro #100</span></div></div>
+      <div class="acc-step"><span class="step-num">2</span><div><strong>Registre seu domínio Netlify</strong><br>App Settings → Basic → Site URL → cole exatamente: <code>https://mmarkt.netlify.app</code><br><span style="color:var(--red);font-size:11px">⚠ Sem isso o browser bloqueia por CORS e aparece erro #100</span></div></div>
       <div class="acc-step"><span class="step-num">3</span><div><strong>Gere o Token com as 3 permissões corretas</strong><br>Graph API Explorer → Gerar Token → marque: <code>ads_read</code> · <code>ads_management</code> · <code>business_management</code><br><span style="color:var(--text3);font-size:11px">Token de usuário expira em ~1h. Para produção use System User Token (não expira).</span></div></div>
       <div class="acc-step"><span class="step-num">4</span><div><strong>Copie o ID da Conta</strong><br>Gerenciador de Anúncios → URL ou Configurações da Conta → formato: <code>act_XXXXXXXXXX</code><br><span style="color:var(--text3);font-size:11px">O sistema adiciona "act_" automaticamente se você colar só os números.</span></div></div>
       <div class="acc-step"><span class="step-num">5</span><div><strong>Adicione e clique em Sincronizar</strong><br>Se houver erro, ele aparece abaixo do card com a causa exata e instruções de correção.</div></div>
@@ -2364,7 +2364,7 @@ function showSyncError(accId, msg, platform) {
       • O ID da conta está no formato <code>act_XXXXXXXXXX</code>?<br>
       • O token tem as permissões <code>ads_read</code>, <code>ads_management</code>, <code>business_management</code>?<br>
       • O token não está expirado? Gere um novo no <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a><br>
-      • Seu domínio <strong>theusmarkt.netlify.app</strong> está registrado no App Facebook (Settings → Basic → Site URL)?`
+      • Seu domínio <strong>mmarkt.netlify.app</strong> está registrado no App Facebook (Settings → Basic → Site URL)?`
   };
 
   const platIcons = { meta: '📘' };
@@ -2547,7 +2547,7 @@ async function exportCampPDF() {
     doc.setFillColor(...bg2); doc.rect(0,0,W,22,'F');
     doc.setFillColor(...acc); doc.rect(0,22,W,1,'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(14); doc.setTextColor(...acc);
-    doc.text('TheusMarkt', 14, 13);
+    doc.text('MMarkt v5.0', 14, 13);
     const tabLabel = campPlatformFilter === 'meta' ? 'Análise Estratégica — Meta Ads' : 'Perfis e Funil';
     doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...tcol);
     doc.text(tabLabel, 14, 19);
@@ -2593,11 +2593,11 @@ async function exportCampPDF() {
       doc.setPage(p);
       doc.setFillColor(...bg2); doc.rect(0,H-8,W,8,'F');
       doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(100,110,130);
-      doc.text('TheusMarkt · Matheus Muniz Marketing Estratégico · theusmarkt.netlify.app', W/2, H-3, {align:'center'});
+      doc.text('MMarkt v5.0 · Matheus Muniz Marketing Estratégico · mmarkt.netlify.app', W/2, H-3, {align:'center'});
       doc.text(`Pág. ${p}/${total}`, W-8, H-3, {align:'right'});
     }
 
-    const fname = campPlatformFilter === 'meta' ? 'TheusMarkt_Analise_Estrategica' : 'TheusMarkt_Perfis_Funil';
+    const fname = campPlatformFilter === 'meta' ? 'MMarkt_Analise_Estrategica' : 'MMarkt_Perfis_Funil';
     doc.save(`${fname}_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
     showToast('✅ PDF exportado!', 'success');
   } catch(e) {
@@ -2656,14 +2656,22 @@ async function exportPDF() {
     doc.setFillColor(...bg2); doc.rect(0,0,W,20,'F');
     // Logo
     try {
-      const logoSrc=isLight?'Logo_TheusMarkt_Preto.png':'Logo_TheusMarkt.png';
+      const logoSrc=isLight?'Logo_MMarkt_Preto.png':'Logo_MMarkt.png';
       const img=new Image(); img.src=logoSrc;
       await new Promise(r=>{img.onload=r;img.onerror=r;setTimeout(r,1500);});
-      if(img.naturalWidth>0) doc.addImage(img,'PNG',8,2,40,14,'','FAST');
+      if(img.naturalWidth>0){
+        // Mantém proporção original da logo
+        const maxW=38, maxH=14;
+        const ratio=img.naturalWidth/img.naturalHeight;
+        let lw=maxW, lh=maxW/ratio;
+        if(lh>maxH){lh=maxH;lw=maxH*ratio;}
+        const ly=2+(maxH-lh)/2;
+        doc.addImage(img,'PNG',8,ly,lw,lh,'','FAST');
+      }
       else throw 0;
     } catch(e){
       doc.setFont('helvetica','bold');doc.setFontSize(12);
-      doc.setTextColor(240,192,64);doc.text('TheusMarkt',10,13);
+      doc.setTextColor(240,192,64);doc.text('MMarkt',10,13);
     }
     doc.setFont('helvetica','normal');doc.setFontSize(7);
     doc.setTextColor(...tc3);
@@ -2676,7 +2684,7 @@ async function exportPDF() {
     doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(...tc2);
     doc.text('Relatório de Performance',10,y);y+=5;
     doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...tc3);
-    doc.text('Matheus Muniz Marketing Estratégico · TheusMarkt v4.0',10,y);y+=8;
+    doc.text('Matheus Muniz Marketing Estratégico · MMarkt v5.0',10,y);y+=8;
 
     // KPIs helper
     const kpiW=(W-20)/5;
@@ -2766,11 +2774,11 @@ async function exportPDF() {
       doc.setPage(p);
       doc.setFillColor(...bg2);doc.rect(0,H-8,W,8,'F');
       doc.setFont('helvetica','normal');doc.setFontSize(6);doc.setTextColor(...tc3);
-      doc.text('TheusMarkt · Matheus Muniz Marketing Estratégico · theusmarkt.netlify.app',W/2,H-3,{align:'center'});
+      doc.text('MMarkt v5.0 · Matheus Muniz Marketing Estratégico · mmarkt.netlify.app',W/2,H-3,{align:'center'});
       doc.text(`Pág. ${p}/${total}`,W-8,H-3,{align:'right'});
     }
 
-    doc.save(`TheusMarkt_Dashboard_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
+    doc.save(`MMarkt_Dashboard_${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
     showToast('✅ PDF exportado com gráficos!','success');
 
   } catch(e){
