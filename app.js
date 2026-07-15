@@ -142,9 +142,7 @@ function initApp() {
     const _r = decodeURIComponent(escape(atob('TWFya2V0aW5nIEVzdHJhdMOpZ2ljbw==')));
     const el = document.getElementById('sbOwnerCard');
     if (!el) return;
-    const _isDark = !document.body.classList.contains('light');
-    const _logo = _isDark ? 'Logo_MMarkt.png' : 'Logo_MMarkt_Preto.png';
-    el.innerHTML = '<div class="sb-owner-card"><div class="sb-owner-avatar"><img src="'+_logo+'" alt="MMarkt" class="sb-owner-logo" onerror="this.outerHTML=\'MM\'"></div><div class="sb-owner-info"><div class="sb-owner-name">'+_o+'</div><div class="sb-owner-role">'+_r+'</div></div></div>';
+    el.innerHTML = '<div class="sb-owner-card"><div class="sb-owner-info"><div class="sb-owner-name">'+_o+'</div><div class="sb-owner-role">'+_r+'</div></div></div>';
   })();
   // Aplica tema salvo
   const savedTheme = localStorage.getItem('theusmarkt_theme') || 'dark';
@@ -257,7 +255,7 @@ async function fetchMetaAPI(path, params = {}) {
   return data;
 }
 
-async function syncMetaAccount(account) {
+async function syncMetaAccount(account, dateRange = null) {
   if (account.isDemo) {
     showToast('Conta demo – adicione uma conta real para sincronizar', 'info');
     return 0;
@@ -324,7 +322,9 @@ async function syncMetaAccount(account) {
         const insights = await fetchMetaAPI(`${camp.id}/insights`, {
           access_token: account.token,
           fields: INSIGHT_FIELDS,
-          date_preset: 'last_30d',
+          ...(dateRange
+            ? { time_range: JSON.stringify({ since: dateRange.since, until: dateRange.until }) }
+            : { date_preset: 'last_30d' }),
           level: 'campaign'
         });
         ins = insights.data?.[0] || {};
@@ -805,7 +805,7 @@ function getActiveDateRange() {
   return { since, until };
 }
 
-function applyDashboardDate() {
+async function applyDashboardDate() {
   const from = document.getElementById('dashDateFrom')?.value;
   const to   = document.getElementById('dashDateTo')?.value;
   if (!from || !to) { showToast('Selecione as duas datas', 'error'); return; }
@@ -814,8 +814,24 @@ function applyDashboardDate() {
   const label = document.getElementById('dashDateLabel');
   const f = d => new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
   if (label) label.textContent = `Período: ${f(from)} → ${f(to)}`;
+
+  // Re-sincroniza com o período selecionado para trazer dados reais do intervalo
+  const activeAccounts = state.accounts.filter(a => !a.isDemo && a.platform === 'meta' && a.token && a.accId);
+  if (activeAccounts.length > 0) {
+    showToast('Buscando dados do período selecionado...', 'info');
+    try {
+      for (const acc of activeAccounts) {
+        await syncMetaAccount(acc, { since: from, until: to });
+      }
+      saveState();
+      showToast(`✅ Dados de ${f(from)} → ${f(to)} carregados!`, 'success');
+    } catch(e) {
+      showToast('Erro ao buscar período: ' + e.message, 'error');
+    }
+  } else {
+    showToast(`Filtro aplicado: ${f(from)} → ${f(to)}`, 'success');
+  }
   renderDashboard();
-  showToast('Filtro de data aplicado!', 'success');
 }
 
 function initDashboardDates() {
@@ -1282,7 +1298,26 @@ function setCampPlatform(plat, btn) {
   renderCampaigns();
 }
 
-function applyDateRange() {
+async function applyDateRange() {
+  const from = document.getElementById('campDateFrom')?.value;
+  const to   = document.getElementById('campDateTo')?.value;
+  if (!from || !to) { renderCampaigns(); return; }
+
+  // Sincroniza campanhas com o período selecionado
+  const activeAccounts = state.accounts.filter(a => !a.isDemo && a.platform === 'meta' && a.token && a.accId);
+  if (activeAccounts.length > 0) {
+    showToast('Buscando dados do período selecionado...', 'info');
+    try {
+      for (const acc of activeAccounts) {
+        await syncMetaAccount(acc, { since: from, until: to });
+      }
+      saveState();
+      const f = d => new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
+      showToast(`✅ Dados de ${f(from)} → ${f(to)} carregados!`, 'success');
+    } catch(e) {
+      showToast('Erro ao buscar período: ' + e.message, 'error');
+    }
+  }
   renderCampaigns();
 }
 
